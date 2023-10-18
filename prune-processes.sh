@@ -1,6 +1,6 @@
 #!/bin/bash
 # Constants
-USAGE=$'Usage: prune-processes [num] [flag]\n\tKill all processes that have been running for more than [num] seconds\nFLAGS:\n\t-q QUIET. Kill processes silently\n\t-v VERBOSE. Print information about the processes that will be killed\n\t-t TEST RUN. Print information about processes to be killed, but do not actually kill the processes'
+USAGE=$'Usage: prune-processes [num] [flag]\n\tKill all processes that have been running for more than [num] seconds\nFLAGS:\n\t-q QUIET. Kill processes silently\n\t-v VERBOSE. Print information about the processes that will be killed\n\t-t TEST RUN. Print information about processes to be killed, but do not actually kill the processes\nCONFIG:\n\tWhitelisted Users: /etc/prune-processes/user-whitelist.txt\n\tBlacklisted Commands: /etc/prune-processes/cmd-blacklist.txt'
 NEW_PROCESS_ELAPSED_TIME=4123168608 # A brand new process will sometimes have this be its elapsed time. I'm not sure why. Doesn't look like overflow exactly. Could be a bug in ps.
 TIME=0
 PID=1
