@@ -21,7 +21,6 @@ fi
 
 # Check for non-integer/null arguments in number
 NUMBER="${@: -2:1}"
-echo "Number: $NUMBER"
 case $NUMBER in 
 	''|*[!0-9]*)
 		echo "$USAGE"
@@ -31,18 +30,14 @@ esac
 
 # Check and set flags
 FLAG="${@: -1}"
-echo " Flag: $FLAG"
 case $FLAG in
 	"-v")
 		VERBOSE=1
-		exit
 		;;
 	"-t")
 		TEST_RUN=1
-		exit
 		;;
 	"-q")
-		break
 		;;
 	*)
 		echo "$USAGE"
@@ -70,7 +65,7 @@ ps -eo etimes=,pid=,user=,cmd= | while read process; do
 			break
 		fi
 	done
-	if [[ $USER_OKAY == 1 && $CMD_OKAY == 1 && "${pinfo[$TIME]}" -gt $1 && "${pinfo[$TIME]}" -lt "$NEW_PROCESS_ELAPSED_TIME" ]]; then
+	if [[ $USER_OKAY == 1 && $CMD_OKAY == 1 && "${pinfo[$TIME]}" -gt "$NUMBER" && "${pinfo[$TIME]}" -lt "$NEW_PROCESS_ELAPSED_TIME" ]]; then
 		if [[ $TEST_RUN == 1 ]]; then 
 			echo "Test run - Process found, but no action will be taken:"
 			echo "Time: ${pinfo[$TIME]} PID:  ${pinfo[$PID]} USER: ${pinfo[$USER]} CMD: ${pinfo[$CMD]}"
@@ -78,7 +73,7 @@ ps -eo etimes=,pid=,user=,cmd= | while read process; do
 			if [[ $VERBOSE == 1 ]]; then
 				echo "Time: ${pinfo[$TIME]} PID:  ${pinfo[$PID]} USER: ${pinfo[$USER]} CMD: ${pinfo[$CMD]}"
 			fi
-			#kill "${pinfo[$PID]}"
+			kill "${pinfo[$PID]}"
 		fi
 	fi 
 done
