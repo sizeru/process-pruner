@@ -1,6 +1,6 @@
 #!/bin/bash
 # Constants
-USAGE=$'Usage: prune-processes [num] [flag]\n\tKill all processes that have been running for more than [num] seconds\nFLAGS:\n\t-v VERBOSE. Print information about the processes that will be killed\n\t-t TEST RUN. Print information about processes to be killed, but do not actually kill the processes'
+USAGE=$'Usage: prune-processes [num] [flag]\n\tKill all processes that have been running for more than [num] seconds\nFLAGS:\n\t-q QUIET. Kill processes silently\n\t-v VERBOSE. Print information about the processes that will be killed\n\t-t TEST RUN. Print information about processes to be killed, but do not actually kill the processes'
 NEW_PROCESS_ELAPSED_TIME=4123168608 # A brand new process will sometimes have this be its elapsed time. I'm not sure why. Doesn't look like overflow exactly. Could be a bug in ps.
 TIME=0
 PID=1
@@ -13,21 +13,42 @@ TEST_RUN=0
 readarray -t USER_WHITELIST < /etc/prune-processes/user-whitelist.txt
 readarray -t CMD_BLACKLIST < /etc/prune-processes/cmd-blacklist.txt
 
-# Check for non-integer/null arguments
-case $1 in 
+#Assert correct number of arguments
+if [[ $# -lt 2 ]]; then
+	echo "$USAGE"
+	exit
+fi
+
+# Check for non-integer/null arguments in number
+NUMBER="${@: -2:1}"
+echo "Number: $NUMBER"
+case $NUMBER in 
 	''|*[!0-9]*)
 		echo "$USAGE"
 		exit
 		;;
 esac
 
-# Enable verbosity if necessary
-if [[ "$2" == "-v" ]]; then
-	VERBOSE=1
-fi
-if [[ "$2" == "-t" ]]; then
-	TEST_RUN=1
-fi
+# Check and set flags
+FLAG="${@: -1}"
+echo " Flag: $FLAG"
+case $FLAG in
+	"-v")
+		VERBOSE=1
+		exit
+		;;
+	"-t")
+		TEST_RUN=1
+		exit
+		;;
+	"-q")
+		break
+		;;
+	*)
+		echo "$USAGE"
+		exit
+		;;
+esac
 
 # Query info about all processes. Kill those where:
 # 	1. The command contains an expression on the blacklist
