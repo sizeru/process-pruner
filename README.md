@@ -13,7 +13,7 @@ prune-processes [num] [flag]
 
 Kill all processes that have been running for more than [num] seconds.
 
-In order for a process to be killed. It must be one of the blacklisted commands and cannot have been
+In order for a process to be killed. It must be one of the blacklisted commands and must not have been
 ran by one of the whitelisted users.
 
 FLAGS:
