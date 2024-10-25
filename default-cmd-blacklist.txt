@@ -1,2 +1,2 @@
-ac_lab
+ac
 se_lab
